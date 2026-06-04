@@ -7,28 +7,34 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to cPanel (ameh.vudse26.cloud)
+    name: Deploy to CyberPanel (ameh.vudse26.cloud)
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Deploy to cPanel via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy via SSH to CyberPanel
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          server: ameh.vudse26.cloud
-          username: ameh.vudse26.cloud|ameh
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
-          port: 21
-          local-dir: ./
-          server-dir: /home/ameh.vudse26.cloud/public_html/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            .github/**
+          host: 159.198.47.177
+          username: ameh
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          script: |
+            rm -rf /home/ameh.vudse26.cloud/public_html/*
+            mkdir -p /home/ameh.vudse26.cloud/public_html
+
+      - name: Copy files via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 159.198.47.177
+          username: ameh
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          source: "./*"
+          target: /home/ameh.vudse26.cloud/public_html/
+          rm: false
 
       - name: Verify deployment
         run: |
