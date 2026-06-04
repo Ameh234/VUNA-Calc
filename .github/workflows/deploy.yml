@@ -17,10 +17,10 @@ jobs:
       - name: Deploy to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: panel.vudse26.cloud
+          server: ameh.vudse26.cloud
           username: ameh.vudse26.cloud|ameh
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
+          protocol: ftp
           port: 21
           local-dir: ./
           server-dir: /home/ameh.vudse26.cloud/public_html/
