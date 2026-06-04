@@ -25,11 +25,17 @@ jobs:
             set -e
             WEBROOT="/home/ameh.vudse26.cloud/public_html"
             REPO="https://github.com/Ameh234/VUNA-Calc.git"
+            TMPDIR="/home/ameh/vuna_tmp"
 
-            if [ ! -d "$WEBROOT/.git" ]; then
-              git clone $REPO $WEBROOT
-            else
+            # If already deployed before, just pull
+            if [ -d "$WEBROOT/.git" ]; then
               cd $WEBROOT && git pull origin main
+            else
+              # Clone into a temp dir, then copy files across
+              rm -rf $TMPDIR
+              git clone $REPO $TMPDIR
+              cp -r $TMPDIR/. $WEBROOT/
+              rm -rf $TMPDIR
             fi
 
             echo "Deploy done!"
@@ -40,4 +46,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
           echo "|------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "|
+          echo "| Site | https://ameh.vudse26.cloud |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Triggered by | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Time | $(date -u) |" >> $GITHUB_STEP_SUMMARY
