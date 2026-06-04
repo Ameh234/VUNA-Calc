@@ -26,13 +26,10 @@ jobs:
             WEBROOT="/home/ameh.vudse26.cloud/public_html"
             REPO="https://github.com/Ameh234/VUNA-Calc.git"
 
-            # If repo doesn't exist yet, clone it. Otherwise pull latest.
             if [ ! -d "$WEBROOT/.git" ]; then
-              rm -rf $WEBROOT/*
               git clone $REPO $WEBROOT
             else
-              cd $WEBROOT
-              git pull origin main
+              cd $WEBROOT && git pull origin main
             fi
 
             echo "Deploy done!"
@@ -43,7 +40,4 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
           echo "|------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Site | https://ameh.vudse26.cloud |" >> $GITHUB_STEP_SUMMARY
-          echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Triggered by | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Time | $(date -u) |" >> $GITHUB_STEP_SUMMARY
+          echo "|
