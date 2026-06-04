@@ -25,7 +25,7 @@ jobs:
             set -e
             WEBROOT="/home/ameh.vudse26.cloud/public_html"
             REPO="https://github.com/Ameh234/VUNA-Calc.git"
-            TMPDIR="/home/ameh/vuna_tmp"
+            TMPDIR="/tmp/vuna_tmp"
 
             # If already deployed before, just pull
             if [ -d "$WEBROOT/.git" ]; then
