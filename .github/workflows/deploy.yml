@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22
           request_pty: true
-          script: bash -c 'mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAQuIPFwPgWnk9QfsD4KCYNw8wWNtsw6yqr0QNQV61cF github-actions-deploy" >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && WEBROOT="/home/ameh.vudse26.cloud/public_html" && REPO="https://github.com/Ameh234/VUNA-Calc.git" && TMPDIR="/tmp/vuna_tmp" && if [ -d "$WEBROOT/.git" ]; then cd $WEBROOT && git pull origin main; else rm -rf $TMPDIR && git clone $REPO $TMPDIR && cp -r $TMPDIR/. $WEBROOT/ && rm -rf $TMPDIR; fi && echo "Deploy done!"'
+          script: bash -c 'mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAQuIPFwPgWnk9QfsD4KCYNw8wWNtsw6yqr0QNQV61cF github-actions-deploy" >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && WEBROOT="/home/ameh.vudse26.cloud/public_html" && REPO="https://github.com/Ameh234/VUNA-Calc.git" && TMPDIR="/tmp/vuna_tmp" && if [ -d "$WEBROOT/.git" ]; then cd $WEBROOT && git pull origin main; else rm -rf $TMPDIR && git clone $REPO $TMPDIR && cp -rf $TMPDIR/. $WEBROOT/ 2>/dev/null || true && rm -rf $TMPDIR; fi && echo "Deploy done!"'
 
       - name: Verify deployment
         run: |
