@@ -14,7 +14,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Deploy via SSH
+      - name: Setup SSH key on server then deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 159.198.47.177
@@ -23,12 +23,18 @@ jobs:
           port: 22
           script: |
             set -e
+
+            # Setup SSH key for future keyless deploys
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
+            echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAQuIPFwPgWnk9QfsD4KCYNw8wWNtsw6yqr0QNQV61cF github-actions-deploy" >> ~/.ssh/authorized_keys
+            chmod 600 ~/.ssh/authorized_keys
+            sort -u ~/.ssh/authorized_keys -o ~/.ssh/authorized_keys
+
+            # Deploy
             WEBROOT="/home/ameh.vudse26.cloud/public_html"
             REPO="https://github.com/Ameh234/VUNA-Calc.git"
             TMPDIR="/tmp/vuna_tmp"
-
-            # Fix ownership of public_html
-            chmod 755 $WEBROOT
 
             if [ -d "$WEBROOT/.git" ]; then
               cd $WEBROOT && git pull origin main
@@ -40,3 +46,10 @@ jobs:
             fi
 
             echo "Deploy done!"
+
+      - name: Verify deployment
+        run: |
+          echo "## Deployment Complete 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "| Site | https://ameh.vudse26.cloud |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Time | $(date -u) |" >> $GITHUB_STEP_SUMMARY
