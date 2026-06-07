@@ -14,22 +14,29 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Upload files via CyberPanel API
-        env:
-          CPANEL_URL: https://panel.vudse26.cloud:8090
-          CPANEL_USER: ameh
-          CPANEL_PASS: ${{ secrets.CPANEL_PASSWORD }}
-          WEBROOT: /home/ameh.vudse26.cloud/public_html
-        run: |
-          for file in index.html assets/css/calculator.css assets/css/styles.css assets/js/script.js; do
-            echo "Uploading $file..."
-            curl -s -X POST "$CPANEL_URL/api/filemanager/upload" \
-              -u "$CPANEL_USER:$CPANEL_PASS" \
-              -F "dir=$WEBROOT/$(dirname $file)" \
-              -F "file=@$file" \
-              -k
-          done
-          echo "All files uploaded!"
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 159.198.47.177
+          username: ameh
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          script: |
+            set -e
+            WEBROOT="/home/ameh.vudse26.cloud/public_html"
+            REPO="https://github.com/Ameh234/VUNA-Calc.git"
+            TMPDIR="/tmp/vuna_tmp"
+
+            if [ -d "$WEBROOT/.git" ]; then
+              cd $WEBROOT && git pull origin main
+            else
+              rm -rf $TMPDIR
+              git clone $REPO $TMPDIR
+              cp -r $TMPDIR/. $WEBROOT/
+              rm -rf $TMPDIR
+            fi
+
+            echo "Deploy done!"
 
       - name: Verify deployment
         run: |
