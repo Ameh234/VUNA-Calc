@@ -27,6 +27,9 @@ jobs:
             REPO="https://github.com/Ameh234/VUNA-Calc.git"
             TMPDIR="/tmp/vuna_tmp"
 
+            # Fix ownership of public_html
+            chmod 755 $WEBROOT
+
             if [ -d "$WEBROOT/.git" ]; then
               cd $WEBROOT && git pull origin main
             else
@@ -37,10 +40,3 @@ jobs:
             fi
 
             echo "Deploy done!"
-
-      - name: Verify deployment
-        run: |
-          echo "## Deployment Complete 🚀" >> $GITHUB_STEP_SUMMARY
-          echo "| Site | https://ameh.vudse26.cloud |" >> $GITHUB_STEP_SUMMARY
-          echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Time | $(date -u) |" >> $GITHUB_STEP_SUMMARY
