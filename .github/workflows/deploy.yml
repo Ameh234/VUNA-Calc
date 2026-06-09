@@ -14,15 +14,21 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Setup SSH key on server then deploy
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: 159.198.47.177
-          username: ameh
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: 22
-          request_pty: true
-          script: bash -c 'mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAQuIPFwPgWnk9QfsD4KCYNw8wWNtsw6yqr0QNQV61cF github-actions-deploy" >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && WEBROOT="/home/ameh.vudse26.cloud/public_html" && REPO="https://github.com/Ameh234/VUNA-Calc.git" && TMPDIR="/tmp/vuna_tmp" && if [ -d "$WEBROOT/.git" ]; then cd $WEBROOT && git pull origin main; else rm -rf $TMPDIR && git clone $REPO $TMPDIR && cp -rf $TMPDIR/. $WEBROOT/ 2>/dev/null || true && rm -rf $TMPDIR; fi && echo "Deploy done!"'
+          server: 159.198.47.177
+          username: ameh.vudse26.cloud_ameh_ftp
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          port: 21
+          local-dir: ./
+          server-dir: /home/ameh.vudse26.cloud/public_html/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .github/**
 
       - name: Verify deployment
         run: |
