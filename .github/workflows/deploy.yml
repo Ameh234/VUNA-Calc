@@ -11,19 +11,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
-
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: 159.198.47.177
-          username: ameh_ameh_ftp
+          username: ameh_ftpdeploy
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           port: 21
           local-dir: ./
-          server-dir: /home/ameh.vudse26.cloud/public_html/
+          server-dir: /public_html/
           exclude: |
             **/.git*
             **/.git*/**
