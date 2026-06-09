@@ -18,7 +18,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: 159.198.47.177
-          username: ameh.vudse26.cloud_ameh_ftp
+          username: ameh_ameh_ftp
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           port: 21
