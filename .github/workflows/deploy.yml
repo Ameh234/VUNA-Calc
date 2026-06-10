@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -21,12 +24,12 @@ jobs:
           port: 21
           local-dir: ./
           server-dir: /public_html/
-          dangerous-clean-slate: true
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             .github/**
+            **/.ftp-deploy-sync-state.json
 
       - name: Verify deployment
         run: |
